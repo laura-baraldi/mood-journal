@@ -1,0 +1,48 @@
+{
+  "app": {
+    "name": "Mood Journal"
+  },
+  "navigation": {
+    "menu": "MENU",
+    "dashboard": "Dashboard",
+    "journal": "My journal",
+    "insights": "Insights",
+    "logout": "Log out"
+  },
+  "dashboard": {
+    "eyebrow": "YOUR PERSONAL SPACE",
+    "greeting": "Good to see you, {name}",
+    "subtitle": "Take a moment for yourself today.",
+    "checkIn": "DAILY CHECK-IN",
+    "question": "How are you feeling?",
+    "description": "There are no wrong answers. Just be honest with yourself.",
+    "noteLabel": "Want to write something about it?",
+    "notePlaceholder": "What's on your mind today?...",
+    "save": "Save today's mood",
+    "saved": "Your check-in has been recorded in this demo.",
+    "weekly": "YOUR JOURNEY",
+    "thisWeek": "This week",
+    "lastSevenDays": "Last 7 days",
+    "summary": "TODAY'S SUMMARY",
+    "yourMood": "Your mood",
+    "selectedMood": "Selected mood",
+    "quote": "Small steps every day lead to meaningful change.",
+    "quoteFooter": "A GENTLE REMINDER",
+    "tipTitle": "A moment for yourself",
+    "tipDescription": "Checking in with your emotions is already an act of self-care.",
+    "footer": "Made with care, for your wellbeing",
+    "loading": "Loading your journal..."
+  },
+  "moods": {
+    "sad": "Sad",
+    "lonely": "Lonely",
+    "anxious": "Anxious",
+    "frustrated": "Frustrated",
+    "angry": "Angry",
+    "tired": "Tired",
+    "neutral": "Neutral",
+    "calm": "Calm",
+    "happy": "Happy",
+    "excited": "Excited"
+  }
+}

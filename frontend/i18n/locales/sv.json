@@ -1,0 +1,48 @@
+{
+  "app": {
+    "name": "Humördagbok"
+  },
+  "navigation": {
+    "menu": "MENY",
+    "dashboard": "Översikt",
+    "journal": "Min dagbok",
+    "insights": "Insikter",
+    "logout": "Logga ut"
+  },
+  "dashboard": {
+    "eyebrow": "DIN PERSONLIGA PLATS",
+    "greeting": "Härligt att se dig, {name}",
+    "subtitle": "Ta en stund för dig själv idag.",
+    "checkIn": "DAGLIG INcheckning",
+    "question": "Hur känner du dig?",
+    "description": "Det finns inga fel svar. Var bara ärlig mot dig själv.",
+    "noteLabel": "Vill du skriva något om det?",
+    "notePlaceholder": "Vad tänker du på idag?...",
+    "save": "Spara dagens humör",
+    "saved": "Din incheckning har sparats i denna demo.",
+    "weekly": "DIN UTVECKLING",
+    "thisWeek": "Den här veckan",
+    "lastSevenDays": "Senaste 7 dagarna",
+    "summary": "DAGENS SAMMANFATTNING",
+    "yourMood": "Ditt humör",
+    "selectedMood": "Valt humör",
+    "quote": "Små steg varje dag leder till meningsfull förändring.",
+    "quoteFooter": "EN VÄNLIG PÅMINNELSE",
+    "tipTitle": "En stund för dig själv",
+    "tipDescription": "Att stämma av dina känslor är redan en form av egenomsorg.",
+    "footer": "Skapad med omtanke för ditt välmående",
+    "loading": "Laddar din dagbok..."
+  },
+  "moods": {
+    "sad": "Ledsen",
+    "lonely": "Ensam",
+    "anxious": "Orolig",
+    "frustrated": "Frustrerad",
+    "angry": "Arg",
+    "tired": "Trött",
+    "neutral": "Neutral",
+    "calm": "Lugn",
+    "happy": "Glad",
+    "excited": "Entusiastisk"
+  }
+}
