@@ -43,17 +43,37 @@ const week = computed(() => {
     const date = new Date(today);
     date.setDate(today.getDate() - (6 - index));
 
-    const entry = props.entries.find((item) => {
-      const entryDate = new Date(item.created_at);
+    const dayEntries = props.entries.filter((entry) => {
+      const entryDate = new Date(entry.created_at);
       return entryDate.toDateString() === date.toDateString();
     });
+
+    const scoredEntries = dayEntries.filter(
+      (entry) => moodScores[entry.mood] !== undefined,
+    );
+
+    const average = scoredEntries.length
+      ? scoredEntries.reduce(
+          (total, entry) => total + (moodScores[entry.mood] ?? 0),
+          0,
+        ) / scoredEntries.length
+      : 0;
+
+    const closestMood = Object.entries(moodScores).reduce(
+      (closest, [mood, score]) =>
+        Math.abs(score - average) < Math.abs(closest.score - average)
+          ? { mood, score }
+          : closest,
+      { mood: "", score: Infinity },
+    );
 
     const weekdayKeys = ["sun", "mon", "tue", "wed", "thu", "fri", "sat"];
 
     return {
       day: weekdayKeys[date.getDay()],
-      emoji: entry ? (moodEmojis[entry.mood] ?? "—") : "—",
-      value: entry ? (moodScores[entry.mood] ?? 0) : 0,
+      emoji: scoredEntries.length ? (moodEmojis[closestMood.mood] ?? "—") : "—",
+      value: average,
+      count: scoredEntries.length,
     };
   });
 });
@@ -76,6 +96,7 @@ const week = computed(() => {
             v-if="day.value"
             class="chart-bar"
             :style="{ height: `${day.value}%` }"
+            :title="`${day.count} check-in(s)`"
           ></div>
           <span v-else class="empty-bar">—</span>
         </div>
