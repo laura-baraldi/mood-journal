@@ -3,7 +3,16 @@ const { logout } = useAuth();
 const { t } = useI18n();
 const config = useRuntimeConfig();
 
+type MoodEntry = {
+  id: number;
+  mood: string;
+  note: string | null;
+  created_at: string;
+  updated_at?: string;
+};
+
 const user = ref<{ name: string; email: string } | null>(null);
+const moodEntries = ref<MoodEntry[]>([]);
 const isLoading = ref(true);
 const isSidebarOpen = ref(false);
 
@@ -18,6 +27,23 @@ onMounted(async () => {
         Accept: "application/json",
       },
     });
+
+    try {
+      const response = await $fetch<{ data: MoodEntry[] }>(
+        "/api/mood-entries",
+        {
+          baseURL: config.public.apiBase,
+          credentials: "include",
+          headers: {
+            Accept: "application/json",
+          },
+        },
+      );
+
+      moodEntries.value = response.data;
+    } catch (error) {
+      console.error("Failed to load mood entries:", error);
+    }
   } catch {
     await navigateTo("/login");
   } finally {
@@ -56,11 +82,11 @@ onMounted(async () => {
       <section class="content-grid">
         <div class="left-column">
           <DashboardMoodCheckIn v-model:selected-mood="selectedMood" />
-          <DashboardWeeklyOverview />
+          <DashboardWeeklyOverview :entries="moodEntries" />
         </div>
 
         <div class="right-column">
-          <DashboardMoodSummary :selected-mood="selectedMood" />
+          <DashboardMoodSummary :entries="moodEntries" />
           <DashboardInspirationPanel />
         </div>
       </section>

@@ -1,6 +1,10 @@
 <script setup lang="ts">
 const props = defineProps<{
-  selectedMood: string;
+  entries: {
+    id: number;
+    mood: string;
+    created_at: string;
+  }[];
 }>();
 
 const { t } = useI18n();
@@ -18,12 +22,19 @@ const moods: Record<string, string> = {
   excited: "🤩",
 };
 
-const currentMood = computed(() => ({
-  emoji: moods[props.selectedMood] ?? "—",
-  label: moods[props.selectedMood]
-    ? t(`moods.${props.selectedMood}`)
-    : t("dashboard.notSelected"),
-}));
+const latestEntry = computed(() => props.entries[0] ?? null);
+
+const currentMood = computed(() => {
+  const mood = latestEntry.value?.mood;
+
+  return {
+    emoji: mood ? (moods[mood] ?? "—") : "—",
+    label: mood ? t(`moods.${mood}`) : t("dashboard.notSelected"),
+    date: latestEntry.value
+      ? new Date(latestEntry.value.created_at).toLocaleDateString()
+      : "",
+  };
+});
 </script>
 
 <template>
@@ -35,7 +46,9 @@ const currentMood = computed(() => ({
       <span>{{ currentMood.emoji }}</span>
       <div>
         <strong>{{ currentMood.label }}</strong>
-        <small>{{ t("dashboard.selectedMood") }}</small>
+        <small>
+          {{ currentMood.date || t("dashboard.notSelected") }}
+        </small>
       </div>
     </div>
   </section>

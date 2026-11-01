@@ -1,15 +1,62 @@
 <script setup lang="ts">
+const props = defineProps<{
+  entries: {
+    id: number;
+    mood: string;
+    created_at: string;
+  }[];
+}>();
+
 const { t } = useI18n();
 
-const week = [
-  { day: "mon", emoji: "🙂", value: 65 },
-  { day: "tue", emoji: "😄", value: 90 },
-  { day: "wed", emoji: "😐", value: 45 },
-  { day: "thu", emoji: "😕", value: 30 },
-  { day: "fri", emoji: "🙂", value: 70 },
-  { day: "sat", emoji: "😄", value: 95 },
-  { day: "sun", emoji: "—", value: 0 },
-];
+const moodScores: Record<string, number> = {
+  sad: 20,
+  lonely: 25,
+  anxious: 30,
+  frustrated: 25,
+  angry: 20,
+  tired: 35,
+  neutral: 50,
+  calm: 70,
+  happy: 85,
+  excited: 100,
+};
+
+const moodEmojis: Record<string, string> = {
+  sad: "😢",
+  lonely: "😔",
+  anxious: "😰",
+  frustrated: "😤",
+  angry: "😡",
+  tired: "😴",
+  neutral: "😐",
+  calm: "😌",
+  happy: "😊",
+  excited: "🤩",
+};
+
+const week = computed(() => {
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+
+  return Array.from({ length: 7 }, (_, index) => {
+    const date = new Date(today);
+    date.setDate(today.getDate() - (6 - index));
+
+    const entry = props.entries.find((item) => {
+      const entryDate = new Date(item.created_at);
+      return entryDate.toDateString() === date.toDateString();
+    });
+
+    const weekdayKeys = ["sun", "mon", "tue", "wed", "thu", "fri", "sat"];
+
+    return {
+      day: weekdayKeys[date.getDay()],
+      emoji: entry ? (moodEmojis[entry.mood] ?? "—") : "—",
+      value: entry ? (moodScores[entry.mood] ?? 0) : 0,
+    };
+  });
+});
 </script>
 
 <template>
@@ -23,7 +70,7 @@ const week = [
     </div>
 
     <div class="week-chart">
-      <div v-for="day in week" :key="day.day" class="chart-day">
+      <div v-for="(day, index) in week" :key="index" class="chart-day">
         <div class="chart-bar-area">
           <div
             v-if="day.value"
