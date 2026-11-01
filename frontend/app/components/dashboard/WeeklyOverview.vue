@@ -77,6 +77,33 @@ const week = computed(() => {
     };
   });
 });
+
+const weeklyAverage = computed(() => {
+  const totalEntries = week.value.reduce((total, day) => total + day.count, 0);
+
+  if (!totalEntries) return null;
+
+  const totalScore = week.value.reduce(
+    (total, day) => total + day.value * day.count,
+    0,
+  );
+
+  const average = totalScore / totalEntries;
+
+  const closestMood = Object.entries(moodScores).reduce(
+    (closest, [mood, score]) =>
+      Math.abs(score - average) < Math.abs(closest.score - average)
+        ? { mood, score }
+        : closest,
+    { mood: "", score: Infinity },
+  );
+
+  return {
+    mood: closestMood.mood,
+    emoji: moodEmojis[closestMood.mood] ?? "—",
+    label: t(`moods.${closestMood.mood}`),
+  };
+});
 </script>
 
 <template>
@@ -86,7 +113,18 @@ const week = computed(() => {
         <p class="eyebrow">{{ t("dashboard.weekly") }}</p>
         <h2>{{ t("dashboard.thisWeek") }}</h2>
       </div>
-      <span class="week-caption">{{ t("dashboard.lastSevenDays") }}</span>
+
+      <div class="heading-right">
+        <span class="week-caption">{{ t("dashboard.lastSevenDays") }}</span>
+
+        <div v-if="weeklyAverage" class="weekly-average">
+          <span>{{ t("dashboard.weeklyAverage") }}</span>
+          <div class="average-mood">
+            <span>{{ weeklyAverage.emoji }}</span>
+            <strong>{{ weeklyAverage.label }}</strong>
+          </div>
+        </div>
+      </div>
     </div>
 
     <div class="week-chart">
@@ -100,6 +138,7 @@ const week = computed(() => {
           ></div>
           <span v-else class="empty-bar">—</span>
         </div>
+
         <span class="chart-emoji">{{ day.emoji }}</span>
         <span class="chart-label">{{ t(`weekdays.${day.day}`) }}</span>
       </div>
@@ -121,6 +160,13 @@ const week = computed(() => {
   align-items: flex-start;
 }
 
+.heading-right {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 8px;
+}
+
 .eyebrow {
   font-size: 10px;
   letter-spacing: 1.5px;
@@ -138,6 +184,30 @@ h2 {
 .week-caption {
   color: #a0aaa0;
   font-size: 11px;
+}
+
+.weekly-average {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 4px;
+  color: #99a59a;
+  font-size: 10px;
+}
+
+.average-mood {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.average-mood span {
+  font-size: 20px;
+}
+
+.average-mood strong {
+  color: #607d60;
+  font-size: 13px;
 }
 
 .week-chart {
