@@ -50,7 +50,7 @@ onMounted(async () => {
         <span></span>
       </button>
 
-      <DashboardDashboardHeader :name="user.name.split(' ')[0]" />
+      <DashboardHeader :name="user.name.split(' ')[0] ?? user.name" />
 
       <section class="content-grid">
         <div class="left-column">

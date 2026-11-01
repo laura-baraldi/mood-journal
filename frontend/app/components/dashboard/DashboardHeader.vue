@@ -3,24 +3,48 @@ defineProps<{
   name: string;
 }>();
 
-const today = new Date().toLocaleDateString("en-US", {
-  weekday: "long",
-  month: "long",
-  day: "numeric",
-});
+const { t, locale, setLocale } = useI18n();
+
+const today = computed(() =>
+  new Intl.DateTimeFormat(locale.value === "sv" ? "sv-SE" : "en-US", {
+    weekday: "long",
+    month: "long",
+    day: "numeric",
+  }).format(new Date()),
+);
 </script>
 
 <template>
   <header class="topbar">
     <div>
-      <p class="eyebrow">YOUR PERSONAL SPACE</p>
-      <h1>Good to see you, {{ name }} <span>✳</span></h1>
-      <p class="subtitle">Take a moment for yourself today.</p>
+      <p class="eyebrow">{{ t("dashboard.eyebrow") }}</p>
+      <h1>{{ t("dashboard.greeting", { name }) }} <span>✳</span></h1>
+      <p class="subtitle">{{ t("dashboard.subtitle") }}</p>
     </div>
 
-    <div class="date-pill">
-      <span>◷</span>
-      {{ today }}
+    <div class="header-actions">
+      <div class="language-switch" aria-label="Choose language">
+        <button
+          :class="{ active: locale === 'en' }"
+          :aria-pressed="locale === 'en'"
+          @click="setLocale('en')"
+        >
+          EN
+        </button>
+
+        <button
+          :class="{ active: locale === 'sv' }"
+          :aria-pressed="locale === 'sv'"
+          @click="setLocale('sv')"
+        >
+          SV
+        </button>
+      </div>
+
+      <div class="date-pill">
+        <span>◷</span>
+        {{ today }}
+      </div>
     </div>
   </header>
 </template>
@@ -58,6 +82,37 @@ h1 span {
   margin: 0;
 }
 
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.language-switch {
+  display: flex;
+  gap: 3px;
+  padding: 4px;
+  border: 1px solid #e7ebe4;
+  border-radius: 30px;
+  background: white;
+}
+
+.language-switch button {
+  border: 0;
+  border-radius: 20px;
+  padding: 7px 10px;
+  background: transparent;
+  color: #89948a;
+  font-size: 10px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.language-switch button.active {
+  background: #edf3eb;
+  color: #56745e;
+}
+
 .date-pill {
   border: 1px solid #e7ebe4;
   background: white;
@@ -76,8 +131,8 @@ h1 span {
     display: block;
   }
 
-  .date-pill {
-    display: inline-block;
+  .header-actions {
+    flex-wrap: wrap;
     margin-top: 17px;
   }
 }
