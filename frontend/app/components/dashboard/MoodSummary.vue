@@ -3,38 +3,39 @@ const props = defineProps<{
   selectedMood: string;
 }>();
 
-const moods: Record<string, { emoji: string; label: string }> = {
-  sad: { emoji: "😢", label: "Sad" },
-  lonely: { emoji: "😔", label: "Lonely" },
-  anxious: { emoji: "😰", label: "Anxious" },
-  frustrated: { emoji: "😤", label: "Frustrated" },
-  angry: { emoji: "😡", label: "Angry" },
-  tired: { emoji: "😴", label: "Tired" },
-  neutral: { emoji: "😐", label: "Neutral" },
-  calm: { emoji: "😌", label: "Calm" },
-  happy: { emoji: "😊", label: "Happy" },
-  excited: { emoji: "🤩", label: "Excited" },
+const { t } = useI18n();
+
+const moods: Record<string, string> = {
+  sad: "😢",
+  lonely: "😔",
+  anxious: "😰",
+  frustrated: "😤",
+  angry: "😡",
+  tired: "😴",
+  neutral: "😐",
+  calm: "😌",
+  happy: "😊",
+  excited: "🤩",
 };
 
-const currentMood = computed(
-  () =>
-    moods[props.selectedMood] ?? {
-      emoji: "—",
-      label: "Not selected",
-    },
-);
+const currentMood = computed(() => ({
+  emoji: moods[props.selectedMood] ?? "—",
+  label: moods[props.selectedMood]
+    ? t(`moods.${props.selectedMood}`)
+    : t("dashboard.notSelected"),
+}));
 </script>
 
 <template>
   <section class="card summary-card">
-    <p class="eyebrow">TODAY'S SUMMARY</p>
-    <h2>Your mood</h2>
+    <p class="eyebrow">{{ t("dashboard.summary") }}</p>
+    <h2>{{ t("dashboard.yourMood") }}</h2>
 
     <div class="summary-mood">
       <span>{{ currentMood.emoji }}</span>
       <div>
         <strong>{{ currentMood.label }}</strong>
-        <small>Selected mood</small>
+        <small>{{ t("dashboard.selectedMood") }}</small>
       </div>
     </div>
   </section>

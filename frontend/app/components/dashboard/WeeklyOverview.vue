@@ -1,12 +1,14 @@
 <script setup lang="ts">
+const { t } = useI18n();
+
 const week = [
-  { day: "Mon", emoji: "🙂", value: 65 },
-  { day: "Tue", emoji: "😄", value: 90 },
-  { day: "Wed", emoji: "😐", value: 45 },
-  { day: "Thu", emoji: "😕", value: 30 },
-  { day: "Fri", emoji: "🙂", value: 70 },
-  { day: "Sat", emoji: "😄", value: 95 },
-  { day: "Sun", emoji: "—", value: 0 },
+  { day: "mon", emoji: "🙂", value: 65 },
+  { day: "tue", emoji: "😄", value: 90 },
+  { day: "wed", emoji: "😐", value: 45 },
+  { day: "thu", emoji: "😕", value: 30 },
+  { day: "fri", emoji: "🙂", value: 70 },
+  { day: "sat", emoji: "😄", value: 95 },
+  { day: "sun", emoji: "—", value: 0 },
 ];
 </script>
 
@@ -14,10 +16,10 @@ const week = [
   <section class="card week-card">
     <div class="section-heading">
       <div>
-        <p class="eyebrow">YOUR JOURNEY</p>
-        <h2>This week</h2>
+        <p class="eyebrow">{{ t("dashboard.weekly") }}</p>
+        <h2>{{ t("dashboard.thisWeek") }}</h2>
       </div>
-      <span class="week-caption">Last 7 days</span>
+      <span class="week-caption">{{ t("dashboard.lastSevenDays") }}</span>
     </div>
 
     <div class="week-chart">
@@ -31,7 +33,7 @@ const week = [
           <span v-else class="empty-bar">—</span>
         </div>
         <span class="chart-emoji">{{ day.emoji }}</span>
-        <span class="chart-label">{{ day.day }}</span>
+        <span class="chart-label">{{ t(`weekdays.${day.day}`) }}</span>
       </div>
     </div>
   </section>

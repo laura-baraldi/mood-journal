@@ -7,25 +7,23 @@ const emit = defineEmits<{
   "update:selectedMood": [value: string];
 }>();
 
+const { t } = useI18n();
+
 const note = ref("");
 const saved = ref(false);
 
 const moods = [
-  { id: "sad", emoji: "😢", label: "Sad" },
-  { id: "lonely", emoji: "😔", label: "Lonely" },
-  { id: "anxious", emoji: "😰", label: "Anxious" },
-  { id: "frustrated", emoji: "😤", label: "Frustrated" },
-  { id: "angry", emoji: "😡", label: "Angry" },
-  { id: "tired", emoji: "😴", label: "Tired" },
-  { id: "neutral", emoji: "😐", label: "Neutral" },
-  { id: "calm", emoji: "😌", label: "Calm" },
-  { id: "happy", emoji: "😊", label: "Happy" },
-  { id: "excited", emoji: "🤩", label: "Excited" },
+  { id: "sad", emoji: "😢" },
+  { id: "lonely", emoji: "😔" },
+  { id: "anxious", emoji: "😰" },
+  { id: "frustrated", emoji: "😤" },
+  { id: "angry", emoji: "😡" },
+  { id: "tired", emoji: "😴" },
+  { id: "neutral", emoji: "😐" },
+  { id: "calm", emoji: "😌" },
+  { id: "happy", emoji: "😊" },
+  { id: "excited", emoji: "🤩" },
 ];
-
-const currentMood = computed(() =>
-  moods.find((mood) => mood.id === props.selectedMood),
-);
 
 function selectMood(id: string) {
   emit("update:selectedMood", id);
@@ -41,10 +39,10 @@ function saveMood() {
   <section class="card mood-card">
     <div class="section-heading">
       <div>
-        <p class="eyebrow">DAILY CHECK-IN</p>
-        <h2>How are you feeling?</h2>
+        <p class="eyebrow">{{ t("dashboard.checkIn") }}</p>
+        <h2>{{ t("dashboard.question") }}</h2>
         <p class="muted">
-          There are no wrong answers. Just be honest with yourself.
+          {{ t("dashboard.description") }}
         </p>
       </div>
       <span class="sparkle">✳</span>
@@ -59,27 +57,25 @@ function saveMood() {
         @click="selectMood(mood.id)"
       >
         <span class="mood-emoji">{{ mood.emoji }}</span>
-        <span>{{ mood.label }}</span>
+        <span>{{ t(`moods.${mood.id}`) }}</span>
       </button>
     </div>
 
     <div class="note-section">
-      <label for="note">Want to write something about it?</label>
+      <label for="note">{{ t("dashboard.noteLabel") }}</label>
       <textarea
         id="note"
         v-model="note"
-        placeholder="What's on your mind today?..."
+        :placeholder="t('dashboard.notePlaceholder')"
         rows="4"
         @input="saved = false"
       ></textarea>
     </div>
 
-    <div v-if="saved" class="success-message">
-      ✓ Your check-in has been recorded in this demo.
-    </div>
+    <div v-if="saved" class="success-message">✓ {{ t("dashboard.saved") }}</div>
 
     <button class="save-button" @click="saveMood">
-      Save today's mood <span>→</span>
+      {{ t("dashboard.save") }} <span>→</span>
     </button>
   </section>
 </template>

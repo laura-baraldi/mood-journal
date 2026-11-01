@@ -7,7 +7,9 @@
     "dashboard": "Översikt",
     "journal": "Min dagbok",
     "insights": "Insikter",
-    "logout": "Logga ut"
+    "logout": "Logga ut",
+    "closeMenu": "Stäng menyn",
+    "openMenu": "Öppna navigeringsmenyn"
   },
   "dashboard": {
     "eyebrow": "DIN PERSONLIGA PLATS",
@@ -31,7 +33,8 @@
     "tipTitle": "En stund för dig själv",
     "tipDescription": "Att stämma av dina känslor är redan en form av egenomsorg.",
     "footer": "Skapad med omtanke för ditt välmående",
-    "loading": "Laddar din dagbok..."
+    "loading": "Laddar din dagbok...",
+    "notSelected": "Inget valt"
   },
   "moods": {
     "sad": "Ledsen",
@@ -44,5 +47,14 @@
     "calm": "Lugn",
     "happy": "Glad",
     "excited": "Entusiastisk"
+  },
+  "weekdays": {
+    "mon": "Mån",
+    "tue": "Tis",
+    "wed": "Ons",
+    "thu": "Tor",
+    "fri": "Fre",
+    "sat": "Lör",
+    "sun": "Sön"
   }
 }

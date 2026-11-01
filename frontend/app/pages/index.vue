@@ -1,5 +1,6 @@
 <script setup lang="ts">
 const { logout } = useAuth();
+const { t } = useI18n();
 const config = useRuntimeConfig();
 
 const user = ref<{ name: string; email: string } | null>(null);
@@ -28,7 +29,7 @@ onMounted(async () => {
 <template>
   <div v-if="isLoading" class="loading-screen">
     <span class="loading-dot"></span>
-    Loading your journal...
+    {{ t("dashboard.loading") }}
   </div>
 
   <div v-else-if="user" class="dashboard">
@@ -42,7 +43,7 @@ onMounted(async () => {
     <main class="main-content">
       <button
         class="menu-button"
-        aria-label="Open navigation menu"
+        :aria-label="t('navigation.openMenu')"
         @click="isSidebarOpen = true"
       >
         <span></span>
@@ -64,9 +65,7 @@ onMounted(async () => {
         </div>
       </section>
 
-      <footer class="footer">
-        Made with care, for your wellbeing <span>♡</span>
-      </footer>
+      <footer class="footer">{{ t("dashboard.footer") }} <span>♡</span></footer>
     </main>
   </div>
 </template>

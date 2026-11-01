@@ -11,6 +11,8 @@ defineProps<{
 const emit = defineEmits<{
   close: [];
 }>();
+
+const { t } = useI18n();
 </script>
 
 <template>
@@ -19,33 +21,33 @@ const emit = defineEmits<{
   <aside class="sidebar" :class="{ 'sidebar-open': isOpen }">
     <div class="brand">
       <div class="brand-icon">✳</div>
-      <span>Mood Journal</span>
+      <span>{{ t("app.name") }}</span>
 
       <button
         class="close-button"
-        aria-label="Close menu"
+        :aria-label="t('navigation.closeMenu')"
         @click="emit('close')"
       >
         ×
       </button>
     </div>
 
-    <div class="nav-label">MENU</div>
+    <div class="nav-label">{{ t("navigation.menu") }}</div>
 
     <nav class="navigation">
       <a href="#" class="nav-item active" @click="emit('close')">
         <span>◫</span>
-        Dashboard
+        {{ t("navigation.dashboard") }}
       </a>
 
       <a href="#" class="nav-item" @click="emit('close')">
         <span>▤</span>
-        My journal
+        {{ t("navigation.journal") }}
       </a>
 
       <a href="#" class="nav-item" @click="emit('close')">
         <span>▥</span>
-        Insights
+        {{ t("navigation.insights") }}
       </a>
     </nav>
 
@@ -61,7 +63,9 @@ const emit = defineEmits<{
         </div>
       </div>
 
-      <button class="logout-button" @click="logout">↗ Log out</button>
+      <button class="logout-button" @click="logout">
+        ↗ {{ t("navigation.logout") }}
+      </button>
     </div>
   </aside>
 </template>

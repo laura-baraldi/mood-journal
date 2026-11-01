@@ -7,7 +7,9 @@
     "dashboard": "Dashboard",
     "journal": "My journal",
     "insights": "Insights",
-    "logout": "Log out"
+    "logout": "Log out",
+    "closeMenu": "Close menu",
+    "openMenu": "Open navigation menu"
   },
   "dashboard": {
     "eyebrow": "YOUR PERSONAL SPACE",
@@ -31,7 +33,8 @@
     "tipTitle": "A moment for yourself",
     "tipDescription": "Checking in with your emotions is already an act of self-care.",
     "footer": "Made with care, for your wellbeing",
-    "loading": "Loading your journal..."
+    "loading": "Loading your journal...",
+    "notSelected": "Not selected"
   },
   "moods": {
     "sad": "Sad",
@@ -44,5 +47,14 @@
     "calm": "Calm",
     "happy": "Happy",
     "excited": "Excited"
+  },
+  "weekdays": {
+    "mon": "Mon",
+    "tue": "Tue",
+    "wed": "Wed",
+    "thu": "Thu",
+    "fri": "Fri",
+    "sat": "Sat",
+    "sun": "Sun"
   }
 }

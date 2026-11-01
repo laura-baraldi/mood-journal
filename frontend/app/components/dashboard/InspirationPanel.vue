@@ -1,17 +1,21 @@
+<script setup lang="ts">
+const { t } = useI18n();
+</script>
+
 <template>
   <div class="inspiration">
     <section class="quote-card">
       <span class="quote-mark">“</span>
-      <p>Small steps every day lead to meaningful change.</p>
-      <span class="quote-footer">A GENTLE REMINDER</span>
+      <p>{{ t("dashboard.quote") }}</p>
+      <span class="quote-footer">{{ t("dashboard.quoteFooter") }}</span>
       <div class="quote-decoration">✳</div>
     </section>
 
     <section class="card tip-card">
       <div class="tip-icon">♡</div>
       <div>
-        <strong>A moment for yourself</strong>
-        <p>Checking in with your emotions is already an act of self-care.</p>
+        <strong>{{ t("dashboard.tipTitle") }}</strong>
+        <p>{{ t("dashboard.tipDescription") }}</p>
       </div>
     </section>
   </div>
