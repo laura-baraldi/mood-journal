@@ -1,8 +1,8 @@
 # Mood Journal
 
-Mood Journal is a mood tracking and self-reflection web application designed to help users record their daily emotions, monitor mood patterns, and reflect on their well-being.
+Mood Journal is a mood tracking and self-reflection web application designed to help users record their emotions, monitor mood patterns, and reflect on their well-being.
 
-The project is built with a separate frontend and backend, communicating through a REST API.
+The project uses a separate frontend and backend that communicate through a REST API.
 
 ## Tech Stack
 
@@ -29,7 +29,7 @@ The project is built with a separate frontend and backend, communicating through
 The application is divided into two independent applications:
 
 - **Frontend:** Nuxt application responsible for the user interface, navigation, and client-side interactions.
-- **Backend:** Laravel REST API responsible for authentication, validation, business logic, and database operations.
+- **Backend:** Laravel REST API responsible for authentication, request validation, business logic, and database operations.
 
 The frontend communicates with the backend through HTTP requests and JSON responses.
 
@@ -82,21 +82,20 @@ The frontend communicates with the backend through HTTP requests and JSON respon
 
 ### Dashboard
 
-- Responsive dashboard layout
-- Component-based Vue architecture
-- Daily mood selection interface
-- Mood summary
-- Weekly mood overview
+- Responsive, component-based dashboard
+- Daily mood check-in with an optional note
+- Persistent mood entries stored in PostgreSQL
+- Mood summary based on the user's saved entries
+- Weekly mood overview calculated from saved check-ins
+- Automatic dashboard refresh after a successful check-in
 - Inspirational content
+- `My Journal` and `Insights` navigation items marked as coming soon
 
 ### Internationalization
 
 - English and Swedish translations
 - Language switcher
-- Localized dashboard content
-- Localized mood labels and weekdays
-
-**Note:** Mood check-ins, weekly chart values, and dashboard statistics currently use frontend demonstration data. Persistent mood tracking and database-backed statistics are planned for a subsequent development stage.
+- Localized dashboard content, mood labels, and weekdays
 
 ## Getting Started
 
@@ -140,7 +139,7 @@ Configure the database connection in `backend/.env`:
     DB_PASSWORD=your-database-password
     DB_SSLMODE=require
 
-Configure the Sanctum stateful domain and session settings:
+Configure the Sanctum stateful domain and session settings as appropriate for your local setup:
 
     SANCTUM_STATEFUL_DOMAINS=localhost:3000
     SESSION_DOMAIN=null
@@ -174,9 +173,7 @@ The frontend will be available at `http://localhost:3000`.
 
 ## Authentication
 
-Authentication is implemented using Laravel Sanctum's stateful SPA authentication.
-
-The application uses session-based authentication with cookies rather than personal access tokens.
+Authentication is implemented using Laravel Sanctum's stateful SPA authentication. The application uses session-based authentication with cookies rather than personal access tokens.
 
 The authentication flow works as follows:
 
@@ -187,17 +184,19 @@ The authentication flow works as follows:
 5. The browser sends the session cookie with subsequent API requests.
 6. Protected endpoints use the `auth:sanctum` middleware to verify authentication.
 
-The frontend includes credentials in API requests to allow session cookies to be sent.
+The frontend includes credentials in API requests so that session cookies are sent with requests.
 
 ## API Endpoints
 
-| Method | Endpoint               | Description                     | Authentication |
-| ------ | ---------------------- | ------------------------------- | -------------- |
-| GET    | `/sanctum/csrf-cookie` | Retrieve the CSRF cookie        | No             |
-| POST   | `/api/register`        | Register a new user             | No             |
-| POST   | `/api/login`           | Authenticate a user             | No             |
-| POST   | `/api/logout`          | End the authenticated session   | Yes            |
-| GET    | `/api/user`            | Retrieve the authenticated user | Yes            |
+| Method | Endpoint               | Description                                    | Authentication |
+| ------ | ---------------------- | ---------------------------------------------- | -------------- |
+| GET    | `/sanctum/csrf-cookie` | Retrieve the CSRF cookie                       | No             |
+| POST   | `/api/register`        | Register a new user                            | No             |
+| POST   | `/api/login`           | Authenticate a user                            | No             |
+| POST   | `/api/logout`          | End the authenticated session                  | Yes            |
+| GET    | `/api/user`            | Retrieve the authenticated user                | Yes            |
+| GET    | `/api/mood-entries`    | Retrieve the authenticated user's mood entries | Yes            |
+| POST   | `/api/mood-entries`    | Create a mood entry for the authenticated user | Yes            |
 
 ## Environment Variables
 
@@ -245,18 +244,17 @@ Preview the production build:
 
 Planned functionality includes:
 
-- Backend integration for daily mood check-ins
-- Persistent mood entries and optional journal notes
+- Mood history with chronological entries and optional notes
+- Calendar view for historical check-ins
+- Editing and deleting saved mood entries
 - Mood intensity tracking
-- Mood history and calendar view
-- Database-backed mood trends and statistics
-- Historical mood data visualization
-- Automated application-specific tests
+- Expanded database-backed mood trends and insights
+- Additional automated tests for application-specific functionality
 
 ## Project Status
 
-The initial project setup, authentication foundation, and dashboard user interface have been implemented.
+The project includes the initial setup, authentication flow, responsive dashboard, and persistent mood check-ins.
 
-The application currently supports user registration, login, logout, authenticated session retrieval, a responsive dashboard interface, and English and Swedish localization.
+Authenticated users can register, log in, save mood entries with optional notes, and view dashboard summaries and weekly visualizations based on their saved entries. The dashboard refreshes its data automatically after a successful check-in.
 
-Mood selection and dashboard visualizations currently use demonstration data. Backend integration for persistent mood tracking and statistics is planned for the next development stage.
+The `My Journal` and `Insights` sections are planned and currently marked as coming soon.

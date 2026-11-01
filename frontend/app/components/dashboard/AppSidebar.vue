@@ -40,15 +40,25 @@ const { t } = useI18n();
         {{ t("navigation.dashboard") }}
       </a>
 
-      <a href="#" class="nav-item" @click="emit('close')">
+      <div
+        class="nav-item nav-item-disabled"
+        aria-disabled="true"
+        title="Coming soon"
+      >
         <span>▤</span>
         {{ t("navigation.journal") }}
-      </a>
+        <span class="coming-soon">Soon</span>
+      </div>
 
-      <a href="#" class="nav-item" @click="emit('close')">
+      <div
+        class="nav-item nav-item-disabled"
+        aria-disabled="true"
+        title="Coming soon"
+      >
         <span>▥</span>
         {{ t("navigation.insights") }}
-      </a>
+        <span class="coming-soon">Soon</span>
+      </div>
     </nav>
 
     <div class="sidebar-bottom">
@@ -128,7 +138,7 @@ const { t } = useI18n();
   font-size: 13px;
 }
 
-.nav-item span {
+.nav-item > span:first-child {
   font-size: 18px;
 }
 
@@ -136,6 +146,28 @@ const { t } = useI18n();
   color: #56745e;
   background: #edf3eb;
   font-weight: 700;
+}
+
+.nav-item-disabled {
+  cursor: not-allowed;
+  opacity: 0.7;
+  user-select: none;
+}
+
+.nav-item-disabled:hover {
+  background: #f7f8f5;
+  color: #7e8a80;
+}
+
+.coming-soon {
+  margin-left: auto;
+  padding: 3px 6px;
+  border-radius: 5px;
+  background: #f0f2ed;
+  color: #929b91;
+  font-size: 9px;
+  font-weight: 600;
+  white-space: nowrap;
 }
 
 .sidebar-bottom {

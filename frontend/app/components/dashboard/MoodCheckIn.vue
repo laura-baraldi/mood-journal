@@ -5,12 +5,16 @@ const props = defineProps<{
 
 const emit = defineEmits<{
   "update:selectedMood": [value: string];
+  saved: [];
 }>();
 
 const { t } = useI18n();
+const config = useRuntimeConfig();
 
 const note = ref("");
 const saved = ref(false);
+const isSaving = ref(false);
+const errorMessage = ref("");
 
 const moods = [
   { id: "sad", emoji: "😢" },
@@ -28,10 +32,56 @@ const moods = [
 function selectMood(id: string) {
   emit("update:selectedMood", id);
   saved.value = false;
+  errorMessage.value = "";
 }
 
-function saveMood() {
-  saved.value = true;
+async function saveMood() {
+  saved.value = false;
+  errorMessage.value = "";
+  isSaving.value = true;
+
+  try {
+    // Get the CSRF cookie from Laravel Sanctum.
+    await $fetch("/sanctum/csrf-cookie", {
+      baseURL: config.public.apiBase,
+      credentials: "include",
+    });
+
+    // Read the XSRF token stored in the browser cookie.
+    const xsrfCookie = useCookie("XSRF-TOKEN");
+
+    // Save the mood entry for the authenticated user.
+    await $fetch("/api/mood-entries", {
+      baseURL: config.public.apiBase,
+      method: "POST",
+      credentials: "include",
+      headers: {
+        Accept: "application/json",
+        "X-XSRF-TOKEN": xsrfCookie.value
+          ? decodeURIComponent(xsrfCookie.value)
+          : "",
+      },
+      body: {
+        mood: props.selectedMood,
+        note: note.value.trim() || null,
+      },
+    });
+
+    saved.value = true;
+    note.value = "";
+
+    // Notify the parent that the mood was saved successfully.
+    emit("saved");
+  } catch (error: any) {
+    if (error.data?.errors) {
+      errorMessage.value = Object.values(error.data.errors).flat().join(" ");
+    } else {
+      errorMessage.value =
+        error.data?.message || "Unable to save your mood. Please try again.";
+    }
+  } finally {
+    isSaving.value = false;
+  }
 }
 </script>
 
@@ -68,14 +118,22 @@ function saveMood() {
         v-model="note"
         :placeholder="t('dashboard.notePlaceholder')"
         rows="4"
-        @input="saved = false"
+        @input="
+          saved = false;
+          errorMessage = '';
+        "
       ></textarea>
     </div>
 
     <div v-if="saved" class="success-message">✓ {{ t("dashboard.saved") }}</div>
 
-    <button class="save-button" @click="saveMood">
-      {{ t("dashboard.save") }} <span>→</span>
+    <div v-if="errorMessage" class="error-message" role="alert">
+      {{ errorMessage }}
+    </div>
+
+    <button class="save-button" :disabled="isSaving" @click="saveMood">
+      {{ isSaving ? "Saving..." : t("dashboard.save") }}
+      <span>→</span>
     </button>
   </section>
 </template>
@@ -199,6 +257,15 @@ h2 {
   font-size: 11px;
 }
 
+.error-message {
+  margin-top: 14px;
+  padding: 10px;
+  background: #fff0ef;
+  color: #a33e38;
+  border-radius: 8px;
+  font-size: 11px;
+}
+
 .save-button {
   width: 100%;
   border: 0;
@@ -215,6 +282,11 @@ h2 {
 
 .save-button:hover {
   background: #5f7e65;
+}
+
+.save-button:disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
 }
 
 .save-button span {
