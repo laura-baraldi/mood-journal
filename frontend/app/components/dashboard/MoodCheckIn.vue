@@ -5,6 +5,7 @@ const props = defineProps<{
 
 const emit = defineEmits<{
   "update:selectedMood": [value: string];
+  saved: [];
 }>();
 
 const { t } = useI18n();
@@ -68,6 +69,9 @@ async function saveMood() {
 
     saved.value = true;
     note.value = "";
+
+    // Notify the parent that the mood was saved successfully.
+    emit("saved");
   } catch (error: any) {
     if (error.data?.errors) {
       errorMessage.value = Object.values(error.data.errors).flat().join(" ");
