@@ -31,10 +31,5 @@ onMounted(async () => {
 </script>
 
 <template>
-  <main>
-    <h1>Mood Journal</h1>
-    <h2>Sanctum connection test</h2>
-    <p>{{ status }}</p>
-    <p>{{ result }}</p>
-  </main>
+  <NuxtPage />
 </template>
