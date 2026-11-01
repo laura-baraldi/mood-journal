@@ -1,7 +1,3 @@
-# mood-journal
-
-A mood tracking and self-reflection web application built with Nuxt, Vue, Laravel and PostgreSQL.
-
 # Mood Journal
 
 Mood Journal is a mood tracking and self-reflection web application designed to help users record their daily emotions, monitor mood patterns, and reflect on their well-being.
@@ -15,6 +11,7 @@ The project is built with a separate frontend and backend, communicating through
 - Nuxt 4
 - Vue 3
 - TypeScript
+- Vue I18n (`@nuxtjs/i18n`)
 
 ### Backend
 
@@ -31,7 +28,7 @@ The project is built with a separate frontend and backend, communicating through
 
 The application is divided into two independent applications:
 
-- **Frontend:** Nuxt application responsible for the user interface and client-side interactions.
+- **Frontend:** Nuxt application responsible for the user interface, navigation, and client-side interactions.
 - **Backend:** Laravel REST API responsible for authentication, validation, business logic, and database operations.
 
 The frontend communicates with the backend through HTTP requests and JSON responses.
@@ -57,23 +54,49 @@ The frontend communicates with the backend through HTTP requests and JSON respon
     │
     └── frontend/
         ├── app/
+        │   ├── components/
+        │   │   └── dashboard/
         │   ├── composables/
         │   │   └── useAuth.ts
         │   ├── pages/
-        │   │   ├── index.vue
         │   │   ├── login.vue
-        │   │   └── register.vue
+        │   │   ├── register.vue
+        │   │   └── index.vue
         │   └── app.vue
+        ├── i18n/
+        │   └── locales/
+        │       ├── en.json
+        │       └── sv.json
         └── nuxt.config.ts
 
 ## Current Features
+
+### Authentication
 
 - User registration
 - User login and logout
 - Session-based authentication with Laravel Sanctum
 - CSRF protection
-- Protected authenticated homepage
-- Frontend and backend communication through HTTP requests and JSON
+- Protected authenticated dashboard
+- Cookie-based authentication between frontend and backend
+
+### Dashboard
+
+- Responsive dashboard layout
+- Component-based Vue architecture
+- Daily mood selection interface
+- Mood summary
+- Weekly mood overview
+- Inspirational content
+
+### Internationalization
+
+- English and Swedish translations
+- Language switcher
+- Localized dashboard content
+- Localized mood labels and weekdays
+
+**Note:** Mood check-ins, weekly chart values, and dashboard statistics currently use frontend demonstration data. Persistent mood tracking and database-backed statistics are planned for a subsequent development stage.
 
 ## Getting Started
 
@@ -107,9 +130,7 @@ Generate the application key:
 
     php artisan key:generate
 
-Configure the database connection in `backend/.env`.
-
-The application uses PostgreSQL. Configure the following environment variables with your own database credentials:
+Configure the database connection in `backend/.env`:
 
     DB_CONNECTION=pgsql
     DB_HOST=your-database-host
@@ -133,9 +154,7 @@ Start the Laravel development server:
 
     php artisan serve
 
-The backend API will be available at:
-
-    http://localhost:8000
+The backend API will be available at `http://localhost:8000`.
 
 ### 3. Frontend setup
 
@@ -151,9 +170,7 @@ Start the Nuxt development server:
 
     npm run dev
 
-The frontend will be available at:
-
-    http://localhost:3000
+The frontend will be available at `http://localhost:3000`.
 
 ## Authentication
 
@@ -226,23 +243,20 @@ Preview the production build:
 
 ## Development Roadmap
 
-The project is being developed incrementally.
-
 Planned functionality includes:
 
-- Dashboard and main application interface
-- Daily mood check-ins
-- Mood intensity and optional journal notes
+- Backend integration for daily mood check-ins
+- Persistent mood entries and optional journal notes
+- Mood intensity tracking
 - Mood history and calendar view
-- Mood trends and statistics
-- Responsive interface for desktop and mobile devices
+- Database-backed mood trends and statistics
+- Historical mood data visualization
+- Automated application-specific tests
 
 ## Project Status
 
-The initial project setup and authentication foundation are implemented.
+The initial project setup, authentication foundation, and dashboard user interface have been implemented.
 
-The application currently supports user registration, login, logout, and authenticated session retrieval.
+The application currently supports user registration, login, logout, authenticated session retrieval, a responsive dashboard interface, and English and Swedish localization.
 
-Dashboard design and core mood tracking functionality are the next development stages.
-
-Automated application-specific tests and continuous integration are planned for a subsequent stage.
+Mood selection and dashboard visualizations currently use demonstration data. Backend integration for persistent mood tracking and statistics is planned for the next development stage.
