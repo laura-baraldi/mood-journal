@@ -5,8 +5,13 @@ export default defineNuxtConfig({
   modules: ["@nuxtjs/i18n"],
 
   runtimeConfig: {
+    // Server-side URL of the Laravel backend.
+    // Overridden on Render by the NUXT_API_BASE environment variable.
+    apiBase: "http://localhost:8000",
+
     public: {
-      apiBase: "http://localhost:8000",
+      // All browser API requests go through the Nuxt proxy.
+      apiBase: "/backend",
     },
   },
 
