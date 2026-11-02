@@ -84,6 +84,10 @@ const { t } = useI18n();
 .sidebar {
   width: 245px;
   min-height: 100vh;
+  position: sticky;
+  top: 0;
+  align-self: flex-start;
+  height: 100vh;
   flex-shrink: 0;
   background: #fff;
   border-right: 1px solid #e9ede7;

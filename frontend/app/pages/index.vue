@@ -148,7 +148,7 @@ input {
 .main-content {
   width: min(1400px, 100%);
   margin: 0 auto;
-  padding: 43px 48px 25px;
+  padding: 28px 40px 16px;
   min-width: 0;
 }
 
@@ -178,19 +178,19 @@ input {
 .content-grid {
   display: grid;
   grid-template-columns: minmax(0, 1.7fr) minmax(230px, 0.85fr);
-  gap: 22px;
+  gap: 18px;
   align-items: start;
 }
 
 .left-column,
 .right-column {
   display: grid;
-  gap: 20px;
+  gap: 16px;
 }
 
 .footer {
   text-align: center;
-  padding: 28px 0 0;
+  padding: 16px 0 0;
   color: #a0aaa0;
   font-size: 10px;
 }
