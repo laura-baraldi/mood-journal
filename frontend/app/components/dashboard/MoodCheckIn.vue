@@ -117,7 +117,7 @@ async function saveMood() {
         id="note"
         v-model="note"
         :placeholder="t('dashboard.notePlaceholder')"
-        rows="4"
+        rows="2"
         @input="
           saved = false;
           errorMessage = '';
@@ -143,7 +143,7 @@ async function saveMood() {
   background: white;
   border: 1px solid #e9ede7;
   border-radius: 16px;
-  padding: 25px;
+  padding: 20px 22px;
 }
 
 .section-heading {
@@ -182,12 +182,12 @@ h2 {
   display: grid;
   grid-template-columns: repeat(5, minmax(0, 1fr));
   gap: 10px;
-  margin: 30px 0;
+  margin: 18px 0;
 }
 
 .mood-option {
   min-width: 0;
-  min-height: 103px;
+  min-height: 82px;
   border: 1px solid #edf0eb;
   background: #fbfcfa;
   border-radius: 12px;
@@ -271,7 +271,7 @@ h2 {
   border: 0;
   border-radius: 10px;
   padding: 14px;
-  margin-top: 19px;
+  margin-top: 14px;
   background: #718f76;
   color: white;
   font-size: 12px;

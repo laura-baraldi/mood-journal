@@ -151,7 +151,7 @@ const weeklyAverage = computed(() => {
   background: white;
   border: 1px solid #e9ede7;
   border-radius: 16px;
-  padding: 25px;
+  padding: 20px 22px;
 }
 
 .section-heading {
@@ -214,7 +214,7 @@ h2 {
   display: grid;
   grid-template-columns: repeat(7, 1fr);
   gap: 12px;
-  margin-top: 22px;
+  margin-top: 14px;
 }
 
 .chart-day {
@@ -225,7 +225,7 @@ h2 {
 }
 
 .chart-bar-area {
-  height: 90px;
+  height: 64px;
   width: 100%;
   display: flex;
   align-items: flex-end;

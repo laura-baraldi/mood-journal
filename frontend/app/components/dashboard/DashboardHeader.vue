@@ -54,7 +54,7 @@ const today = computed(() =>
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 32px;
+  margin-bottom: 20px;
 }
 
 .eyebrow {
