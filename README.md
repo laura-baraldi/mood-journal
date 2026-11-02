@@ -35,39 +35,43 @@ The frontend communicates with the backend through HTTP requests and JSON respon
 
 ## Project Structure
 
-    mood-journal/
-    ├── backend/
-    │   ├── app/
-    │   │   ├── Http/
-    │   │   │   └── Controllers/
-    │   │   ├── Models/
-    │   │   └── Providers/
-    │   ├── bootstrap/
-    │   ├── config/
-    │   ├── database/
-    │   │   ├── factories/
-    │   │   ├── migrations/
-    │   │   └── seeders/
-    │   ├── routes/
-    │   │   └── api.php
-    │   └── tests/
-    │
-    └── frontend/
-        ├── app/
-        │   ├── components/
-        │   │   └── dashboard/
-        │   ├── composables/
-        │   │   └── useAuth.ts
-        │   ├── pages/
-        │   │   ├── login.vue
-        │   │   ├── register.vue
-        │   │   └── index.vue
-        │   └── app.vue
-        ├── i18n/
-        │   └── locales/
-        │       ├── en.json
-        │       └── sv.json
-        └── nuxt.config.ts
+```
+mood-journal/
+├── backend/
+│   ├── app/
+│   │   ├── Http/
+│   │   │   └── Controllers/
+│   │   ├── Models/
+│   │   └── Providers/
+│   ├── bootstrap/
+│   ├── config/
+│   ├── database/
+│   │   ├── factories/
+│   │   ├── migrations/
+│   │   └── seeders/
+│   ├── routes/
+│   │   └── api.php
+│   └── tests/
+│
+└── frontend/
+    ├── app/
+    │   ├── components/
+    │   │   ├── auth/
+    │   │   │   └── Shell.vue
+    │   │   └── dashboard/
+    │   ├── composables/
+    │   │   └── useAuth.ts
+    │   ├── pages/
+    │   │   ├── login.vue
+    │   │   ├── register.vue
+    │   │   └── index.vue
+    │   └── app.vue
+    ├── i18n/
+    │   └── locales/
+    │       ├── en.json
+    │       └── sv.json
+    └── nuxt.config.ts
+```
 
 ## Current Features
 
@@ -79,10 +83,13 @@ The frontend communicates with the backend through HTTP requests and JSON respon
 - CSRF protection
 - Protected authenticated dashboard
 - Cookie-based authentication between frontend and backend
+- Login and registration pages styled consistently with the dashboard, built on a shared `AuthShell` layout component
 
 ### Dashboard
 
 - Responsive, component-based dashboard
+- Compact layout that fits a standard desktop viewport
+- Sticky sidebar navigation
 - Daily mood check-in with an optional note
 - Persistent mood entries stored in PostgreSQL
 - Mood summary based on the user's saved entries
@@ -94,8 +101,10 @@ The frontend communicates with the backend through HTTP requests and JSON respon
 ### Internationalization
 
 - English and Swedish translations
-- Language switcher
+- Language switcher available on the dashboard and on the login and registration pages
 - Localized dashboard content, mood labels, and weekdays
+- Localized authentication pages, including labels, buttons, links, and error messages
+- Language-aware navigation between login, registration, and the dashboard
 
 ## Getting Started
 
@@ -108,50 +117,68 @@ The frontend communicates with the backend through HTTP requests and JSON respon
 
 ### 1. Clone the repository
 
-    git clone https://github.com/laura-baraldi/mood-journal.git
-    cd mood-journal
+```
+git clone https://github.com/laura-baraldi/mood-journal.git
+cd mood-journal
+```
 
 ### 2. Backend setup
 
 Navigate to the backend directory:
 
-    cd backend
+```
+cd backend
+```
 
 Install PHP dependencies:
 
-    composer install
+```
+composer install
+```
 
 Create the environment file:
 
-    copy .env.example .env
+```
+copy .env.example .env
+```
 
 Generate the application key:
 
-    php artisan key:generate
+```
+php artisan key:generate
+```
 
 Configure the database connection in `backend/.env`:
 
-    DB_CONNECTION=pgsql
-    DB_HOST=your-database-host
-    DB_PORT=5432
-    DB_DATABASE=your-database-name
-    DB_USERNAME=your-database-username
-    DB_PASSWORD=your-database-password
-    DB_SSLMODE=require
+```
+DB_CONNECTION=pgsql
+DB_HOST=your-database-host
+DB_PORT=5432
+DB_DATABASE=your-database-name
+DB_USERNAME=your-database-username
+DB_PASSWORD=your-database-password
+DB_SSLMODE=require
+```
 
 Configure the Sanctum stateful domain and session settings as appropriate for your local setup:
 
-    SANCTUM_STATEFUL_DOMAINS=localhost:3000
-    SESSION_DOMAIN=null
-    SESSION_SECURE_COOKIE=false
+```
+SANCTUM_STATEFUL_DOMAINS=localhost:3000
+SESSION_DOMAIN=null
+SESSION_SECURE_COOKIE=false
+```
 
 Run database migrations:
 
-    php artisan migrate
+```
+php artisan migrate
+```
 
 Start the Laravel development server:
 
-    php artisan serve
+```
+php artisan serve
+```
 
 The backend API will be available at `http://localhost:8000`.
 
@@ -159,15 +186,21 @@ The backend API will be available at `http://localhost:8000`.
 
 Open a second terminal and navigate to the frontend directory:
 
-    cd frontend
+```
+cd frontend
+```
 
 Install dependencies:
 
-    npm install
+```
+npm install
+```
 
 Start the Nuxt development server:
 
-    npm run dev
+```
+npm run dev
+```
 
 The frontend will be available at `http://localhost:3000`.
 
@@ -212,33 +245,47 @@ Never commit database passwords, application secrets, or other credentials.
 
 Start the development server:
 
-    php artisan serve
+```
+php artisan serve
+```
 
 Run database migrations:
 
-    php artisan migrate
+```
+php artisan migrate
+```
 
 Run the automated test suite:
 
-    php artisan test
+```
+php artisan test
+```
 
 Clear cached configuration:
 
-    php artisan config:clear
+```
+php artisan config:clear
+```
 
 ### Frontend
 
 Start the development server:
 
-    npm run dev
+```
+npm run dev
+```
 
 Build the production application:
 
-    npm run build
+```
+npm run build
+```
 
 Preview the production build:
 
-    npm run preview
+```
+npm run preview
+```
 
 ## Development Roadmap
 
@@ -255,6 +302,6 @@ Planned functionality includes:
 
 The project includes the initial setup, authentication flow, responsive dashboard, and persistent mood check-ins.
 
-Authenticated users can register, log in, save mood entries with optional notes, and view dashboard summaries and weekly visualizations based on their saved entries. The dashboard refreshes its data automatically after a successful check-in.
+Authenticated users can register, log in, save mood entries with optional notes, and view dashboard summaries and weekly visualizations based on their saved entries. The dashboard refreshes its data automatically after a successful check-in. The login and registration pages share the dashboard's visual style and are available in English and Swedish.
 
 The `My Journal` and `Insights` sections are planned and currently marked as coming soon.
