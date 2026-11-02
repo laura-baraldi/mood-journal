@@ -59,7 +59,7 @@ const currentMood = computed(() => {
   background: white;
   border: 1px solid #e9ede7;
   border-radius: 16px;
-  padding: 25px;
+  padding: 20px 22px;
 }
 
 .eyebrow {
@@ -73,7 +73,7 @@ const currentMood = computed(() => {
 h2 {
   font-family: "Manrope", sans-serif;
   font-size: 19px;
-  margin: 0 0 24px;
+  margin: 0 0 16px;
 }
 
 .summary-mood {

@@ -30,7 +30,7 @@ const { t } = useI18n();
 .quote-card {
   position: relative;
   overflow: hidden;
-  min-height: 195px;
+  min-height: 150px;
   border-radius: 16px;
   padding: 23px;
   background: #eaf0e5;
