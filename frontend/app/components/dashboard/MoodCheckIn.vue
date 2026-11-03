@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { onBeforeUnmount } from "vue";
+
 const props = defineProps<{
   selectedMood: string;
 }>();
@@ -16,6 +18,19 @@ const saved = ref(false);
 const isSaving = ref(false);
 const errorMessage = ref("");
 
+let successTimeout: ReturnType<typeof setTimeout> | undefined;
+
+function clearSuccessTimeout() {
+  if (successTimeout) {
+    clearTimeout(successTimeout);
+    successTimeout = undefined;
+  }
+}
+
+onBeforeUnmount(() => {
+  clearSuccessTimeout();
+});
+
 const moods = [
   { id: "sad", emoji: "😢" },
   { id: "lonely", emoji: "😔" },
@@ -30,12 +45,14 @@ const moods = [
 ];
 
 function selectMood(id: string) {
+  clearSuccessTimeout();
   emit("update:selectedMood", id);
   saved.value = false;
   errorMessage.value = "";
 }
 
 async function saveMood() {
+  clearSuccessTimeout();
   saved.value = false;
   errorMessage.value = "";
   isSaving.value = true;
@@ -69,6 +86,11 @@ async function saveMood() {
 
     saved.value = true;
     note.value = "";
+
+    successTimeout = setTimeout(() => {
+      saved.value = false;
+      successTimeout = undefined;
+    }, 3000);
 
     // Notify the parent that the mood was saved successfully.
     emit("saved");
