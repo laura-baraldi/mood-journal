@@ -4,19 +4,37 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\Rule;
 
 class MoodEntryController extends Controller
 {
     public function index(Request $request): JsonResponse
     {
-        $entries = $request->user()
-            ->moodEntries()
-            ->latest()
-            ->get();
+        $user = $request->user();
+
+        $entries = $user->moodEntries()
+            ->orderByDesc('created_at')
+            ->orderByDesc('id')
+            ->paginate(10);
+
+        $daysTracked = $user->moodEntries()
+            ->selectRaw('DATE(created_at) as entry_date')
+            ->distinct()
+            ->count('entry_date');
 
         return response()->json([
-            'data' => $entries,
+            'data' => $entries->items(),
+            'meta' => [
+                'current_page' => $entries->currentPage(),
+                'last_page' => $entries->lastPage(),
+                'per_page' => $entries->perPage(),
+                'total' => $entries->total(),
+            ],
+            'stats' => [
+                'total_entries' => $entries->total(),
+                'days_tracked' => $daysTracked,
+            ],
         ]);
     }
 
