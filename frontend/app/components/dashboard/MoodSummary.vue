@@ -22,16 +22,35 @@ const moods: Record<string, string> = {
   excited: "🤩",
 };
 
-const latestEntry = computed(() => props.entries[0] ?? null);
+const todayEntry = computed(() => {
+  const today = new Date();
+
+  return (
+    props.entries
+      .filter((entry) => {
+        const entryDate = new Date(entry.created_at);
+
+        return (
+          entryDate.getFullYear() === today.getFullYear() &&
+          entryDate.getMonth() === today.getMonth() &&
+          entryDate.getDate() === today.getDate()
+        );
+      })
+      .sort(
+        (a, b) =>
+          new Date(b.created_at).getTime() - new Date(a.created_at).getTime(),
+      )[0] ?? null
+  );
+});
 
 const currentMood = computed(() => {
-  const mood = latestEntry.value?.mood;
+  const mood = todayEntry.value?.mood;
 
   return {
     emoji: mood ? (moods[mood] ?? "—") : "—",
     label: mood ? t(`moods.${mood}`) : t("dashboard.notSelected"),
-    date: latestEntry.value
-      ? new Date(latestEntry.value.created_at).toLocaleDateString()
+    date: todayEntry.value
+      ? new Date(todayEntry.value.created_at).toLocaleDateString()
       : "",
   };
 });
