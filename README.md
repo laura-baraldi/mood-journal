@@ -12,6 +12,8 @@ The project has a separate frontend and backend that communicate through a REST 
 
 The application is hosted on Render. Because the services use Render's free tier, they may spin down after a period of inactivity. The first visit after inactivity can therefore take a little while while the services start up.
 
+**Please note:** During this startup period, the backend may not be ready to handle registration requests immediately. If you encounter an error when registering, wait up to one minute and try again once the services have had time to start.
+
 ## Screenshot
 
 ![Mood Journal Dashboard](docs/images/mood-journal-dashboard.png)
