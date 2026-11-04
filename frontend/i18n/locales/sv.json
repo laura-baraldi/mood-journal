@@ -74,7 +74,12 @@
     "emptyDescription": "Dina humörregistreringar visas här. Börja med att registrera hur du känner dig idag.",
     "noNote": "Ingen anteckning tillagd.",
     "loadError": "Det gick inte att ladda dagboken. Försök igen.",
-    "tryAgain": "Försök igen"
+    "tryAgain": "Försök igen",
+    "pagination": "Sidnavigering",
+    "previous": "Föregående",
+    "next": "Nästa",
+    "page": "Sida",
+    "of": "av"
   },
   "moods": {
     "sad": "Ledsen",

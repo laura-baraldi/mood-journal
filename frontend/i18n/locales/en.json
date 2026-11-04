@@ -74,7 +74,12 @@
     "emptyDescription": "Your mood check-ins will appear here. Start by recording how you feel today.",
     "noNote": "No note added.",
     "loadError": "Unable to load your journal. Please try again.",
-    "tryAgain": "Try again"
+    "tryAgain": "Try again",
+    "pagination": "Journal pagination",
+    "previous": "Previous",
+    "next": "Next",
+    "page": "Page",
+    "of": "of"
   },
   "moods": {
     "sad": "Sad",
