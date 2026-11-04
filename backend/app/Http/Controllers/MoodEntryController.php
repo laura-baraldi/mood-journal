@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\Rule;
 
 class MoodEntryController extends Controller
@@ -19,9 +18,11 @@ class MoodEntryController extends Controller
             ->paginate(10);
 
         $daysTracked = $user->moodEntries()
-            ->selectRaw('DATE(created_at) as entry_date')
-            ->distinct()
-            ->count('entry_date');
+            ->get()
+            ->pluck('created_at')
+            ->map(fn($date) => $date->toDateString())
+            ->unique()
+            ->count();
 
         return response()->json([
             'data' => $entries->items(),
