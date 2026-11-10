@@ -14,6 +14,10 @@ const emit = defineEmits<{
 
 const { t } = useI18n();
 const route = useRoute();
+const localePath = useLocalePath();
+
+const dashboardPath = computed(() => localePath("/"));
+const journalPath = computed(() => localePath("/journal"));
 </script>
 
 <template>
@@ -37,9 +41,9 @@ const route = useRoute();
 
     <nav class="navigation">
       <NuxtLink
-        to="/"
+        :to="dashboardPath"
         class="nav-item"
-        :class="{ active: route.path === '/' }"
+        :class="{ active: route.path === dashboardPath }"
         @click="emit('close')"
       >
         <span>◫</span>
@@ -47,9 +51,9 @@ const route = useRoute();
       </NuxtLink>
 
       <NuxtLink
-        to="/journal"
+        :to="journalPath"
         class="nav-item"
-        :class="{ active: route.path === '/journal' }"
+        :class="{ active: route.path === journalPath }"
         @click="emit('close')"
       >
         <span>▤</span>
