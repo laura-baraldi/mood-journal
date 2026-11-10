@@ -107,4 +107,83 @@ class MoodEntryControllerTest extends TestCase
             ->assertJsonPath('data.0.id', $firstEntry->id)
             ->assertJsonPath('meta.total', 1);
     }
+
+    public function test_user_can_update_their_own_mood_entry(): void
+    {
+        $user = User::factory()->create();
+
+        Sanctum::actingAs($user);
+
+        $entry = $user->moodEntries()->create([
+            'mood' => 'happy',
+            'note' => 'Feeling good',
+        ]);
+
+        $this->patchJson("/api/mood-entries/{$entry->id}", [
+            'mood' => 'calm',
+            'note' => 'Feeling more relaxed',
+        ])
+            ->assertOk()
+            ->assertJsonPath('data.mood', 'calm')
+            ->assertJsonPath('data.note', 'Feeling more relaxed');
+
+        $this->assertDatabaseHas('mood_entries', [
+            'id' => $entry->id,
+            'mood' => 'calm',
+            'note' => 'Feeling more relaxed',
+        ]);
+    }
+
+    public function test_user_can_delete_their_own_mood_entry(): void
+    {
+        $user = User::factory()->create();
+
+        Sanctum::actingAs($user);
+
+        $entry = $user->moodEntries()->create([
+            'mood' => 'happy',
+        ]);
+
+        $this->deleteJson("/api/mood-entries/{$entry->id}")
+            ->assertNoContent();
+
+        $this->assertDatabaseMissing('mood_entries', [
+            'id' => $entry->id,
+        ]);
+    }
+
+    public function test_user_cannot_update_another_users_mood_entry(): void
+    {
+        $firstUser = User::factory()->create();
+        $secondUser = User::factory()->create();
+
+        $entry = $secondUser->moodEntries()->create([
+            'mood' => 'happy',
+        ]);
+
+        Sanctum::actingAs($firstUser);
+
+        $this->patchJson("/api/mood-entries/{$entry->id}", [
+            'mood' => 'sad',
+        ])->assertNotFound();
+    }
+
+    public function test_user_cannot_delete_another_users_mood_entry(): void
+    {
+        $firstUser = User::factory()->create();
+        $secondUser = User::factory()->create();
+
+        $entry = $secondUser->moodEntries()->create([
+            'mood' => 'happy',
+        ]);
+
+        Sanctum::actingAs($firstUser);
+
+        $this->deleteJson("/api/mood-entries/{$entry->id}")
+            ->assertNotFound();
+
+        $this->assertDatabaseHas('mood_entries', [
+            'id' => $entry->id,
+        ]);
+    }
 }
