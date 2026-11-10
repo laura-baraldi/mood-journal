@@ -35,6 +35,27 @@ const isEntriesLoading = ref(false);
 const isSidebarOpen = ref(false);
 const errorMessage = ref("");
 
+const editingEntry = ref<MoodEntry | null>(null);
+const editMood = ref("");
+const editNote = ref("");
+const isUpdating = ref(false);
+const isDeleting = ref(false);
+const actionError = ref("");
+const actionSuccess = ref("");
+
+const availableMoods = [
+  "sad",
+  "lonely",
+  "anxious",
+  "frustrated",
+  "angry",
+  "tired",
+  "neutral",
+  "calm",
+  "happy",
+  "excited",
+];
+
 // Pagination metadata is provided by the backend.
 const meta = ref({
   current_page: 1,
@@ -105,6 +126,111 @@ async function goToPage(page: number) {
   }
 
   await loadEntries(page);
+}
+
+function startEditing(entry: MoodEntry) {
+  editingEntry.value = entry;
+  editMood.value = entry.mood;
+  editNote.value = entry.note ?? "";
+  actionError.value = "";
+  actionSuccess.value = "";
+}
+
+function cancelEditing() {
+  editingEntry.value = null;
+  editMood.value = "";
+  editNote.value = "";
+  actionError.value = "";
+}
+
+async function updateEntry() {
+  if (!editingEntry.value || isUpdating.value) return;
+
+  isUpdating.value = true;
+  actionError.value = "";
+  actionSuccess.value = "";
+
+  try {
+    await $fetch("/sanctum/csrf-cookie", {
+      baseURL: config.public.apiBase,
+      credentials: "include",
+    });
+
+    const xsrfCookie = useCookie("XSRF-TOKEN");
+
+    await $fetch(`/api/mood-entries/${editingEntry.value.id}`, {
+      baseURL: config.public.apiBase,
+      method: "PATCH",
+      credentials: "include",
+      headers: {
+        Accept: "application/json",
+        "X-XSRF-TOKEN": xsrfCookie.value
+          ? decodeURIComponent(xsrfCookie.value)
+          : "",
+      },
+      body: {
+        mood: editMood.value,
+        note: editNote.value.trim() || null,
+      },
+    });
+
+    editingEntry.value = null;
+    actionSuccess.value = t("journal.updated");
+
+    await loadEntries(meta.value.current_page);
+  } catch (error: any) {
+    actionError.value = error.data?.message || t("journal.updateError");
+  } finally {
+    isUpdating.value = false;
+  }
+}
+
+async function deleteEntry(id: number) {
+  if (isDeleting.value) return;
+
+  if (!window.confirm(t("journal.deleteConfirm"))) return;
+
+  isDeleting.value = true;
+  actionError.value = "";
+  actionSuccess.value = "";
+
+  try {
+    await $fetch("/sanctum/csrf-cookie", {
+      baseURL: config.public.apiBase,
+      credentials: "include",
+    });
+
+    const xsrfCookie = useCookie("XSRF-TOKEN");
+
+    await $fetch(`/api/mood-entries/${id}`, {
+      baseURL: config.public.apiBase,
+      method: "DELETE",
+      credentials: "include",
+      headers: {
+        Accept: "application/json",
+        "X-XSRF-TOKEN": xsrfCookie.value
+          ? decodeURIComponent(xsrfCookie.value)
+          : "",
+      },
+    });
+
+    if (editingEntry.value?.id === id) {
+      cancelEditing();
+    }
+
+    const nextPage =
+      entries.value.length === 1 && meta.value.current_page > 1
+        ? meta.value.current_page - 1
+        : meta.value.current_page;
+
+    actionSuccess.value = t("journal.deleted");
+
+    await loadEntries(nextPage);
+  } catch (error: any) {
+    actionError.value = error.data?.message || t("journal.deleteError");
+  } finally {
+    isDeleting.value = false;
+  }
 }
 
 // Load the authenticated user and the first journal page on mount.
