@@ -10,11 +10,19 @@ type MoodEntry = {
 const props = defineProps<{
   entries: MoodEntry[];
   moods: Record<string, string>;
+  editingEntry: MoodEntry | null;
+  editMood: string;
+  editNote: string;
+  isUpdating: boolean;
 }>();
 
 const emit = defineEmits<{
   edit: [entry: MoodEntry];
   delete: [id: number];
+  "update:mood": [value: string];
+  "update:note": [value: string];
+  saveEdit: [];
+  cancelEdit: [];
 }>();
 
 const { t, locale } = useI18n();
@@ -69,19 +77,32 @@ function formatTime(value: string) {
       <h3 class="day-heading">{{ formatDay(group.date) }}</h3>
 
       <div class="day-entries">
-        <JournalEntryCard
-          v-for="entry in group.entries"
-          :key="entry.id"
-          :id="entry.id"
-          :mood="entry.mood"
-          :mood-emoji="moods[entry.mood] ?? '—'"
-          :mood-label="t(`moods.${entry.mood}`)"
-          :time="formatTime(entry.created_at)"
-          :note="entry.note"
-          :no-note-label="t('journal.noNote')"
-          @edit="emit('edit', entry)"
-          @delete="emit('delete', $event)"
-        />
+        <template v-for="entry in group.entries" :key="entry.id">
+          <JournalEntryEditor
+            v-if="editingEntry?.id === entry.id"
+            :mood="editMood"
+            :note="editNote"
+            :is-saving="isUpdating"
+            :moods="moods"
+            @update:mood="emit('update:mood', $event)"
+            @update:note="emit('update:note', $event)"
+            @save="emit('saveEdit')"
+            @cancel="emit('cancelEdit')"
+          />
+
+          <JournalEntryCard
+            v-else
+            :id="entry.id"
+            :mood="entry.mood"
+            :mood-emoji="moods[entry.mood] ?? '—'"
+            :mood-label="t(`moods.${entry.mood}`)"
+            :time="formatTime(entry.created_at)"
+            :note="entry.note"
+            :no-note-label="t('journal.noNote')"
+            @edit="emit('edit', entry)"
+            @delete="emit('delete', $event)"
+          />
+        </template>
       </div>
     </article>
   </div>

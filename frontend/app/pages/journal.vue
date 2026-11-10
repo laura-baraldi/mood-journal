@@ -142,18 +142,6 @@ onMounted(async () => {
           {{ actionSuccess }}
         </div>
 
-        <JournalEntryEditor
-          v-if="editingEntry"
-          :mood="editMood"
-          :note="editNote"
-          :is-saving="isUpdating"
-          :moods="moods"
-          @update:mood="editMood = $event"
-          @update:note="editNote = $event"
-          @save="updateEntry"
-          @cancel="cancelEditing"
-        />
-
         <div v-if="errorMessage" class="state-card error-state">
           <p>{{ errorMessage }}</p>
           <button @click="loadEntries(meta.current_page)">
@@ -170,8 +158,16 @@ onMounted(async () => {
             v-else
             :entries="entries"
             :moods="moods"
+            :editing-entry="editingEntry"
+            :edit-mood="editMood"
+            :edit-note="editNote"
+            :is-updating="isUpdating"
             @edit="startEditing"
             @delete="deleteEntry"
+            @update:mood="editMood = $event"
+            @update:note="editNote = $event"
+            @save-edit="updateEntry"
+            @cancel-edit="cancelEditing"
           />
 
           <JournalPagination
