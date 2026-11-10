@@ -79,7 +79,18 @@
     "previous": "Previous",
     "next": "Next",
     "page": "Page",
-    "of": "of"
+    "of": "of",
+    "edit": "Edit",
+    "delete": "Delete",
+    "editTitle": "Edit journal entry",
+    "saveChanges": "Save changes",
+    "cancel": "Cancel",
+    "saving": "Saving...",
+    "deleteConfirm": "Are you sure you want to delete this entry?",
+    "updateError": "Unable to update this entry. Please try again.",
+    "deleteError": "Unable to delete this entry. Please try again.",
+    "updated": "Your entry has been updated.",
+    "deleted": "Your entry has been deleted."
   },
   "moods": {
     "sad": "Sad",

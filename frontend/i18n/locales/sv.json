@@ -79,7 +79,18 @@
     "previous": "Föregående",
     "next": "Nästa",
     "page": "Sida",
-    "of": "av"
+    "of": "av",
+    "edit": "Redigera",
+    "delete": "Ta bort",
+    "editTitle": "Redigera dagboksinlägg",
+    "saveChanges": "Spara ändringar",
+    "cancel": "Avbryt",
+    "saving": "Sparar...",
+    "deleteConfirm": "Är du säker på att du vill ta bort det här inlägget?",
+    "updateError": "Det gick inte att uppdatera inlägget. Försök igen.",
+    "deleteError": "Det gick inte att ta bort inlägget. Försök igen.",
+    "updated": "Ditt inlägg har uppdaterats.",
+    "deleted": "Ditt inlägg har tagits bort."
   },
   "moods": {
     "sad": "Ledsen",
