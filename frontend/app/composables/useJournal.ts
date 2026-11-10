@@ -151,8 +151,6 @@ export function useJournal() {
   async function deleteEntry(id: number) {
     if (isDeleting.value) return;
 
-    if (!window.confirm(t("journal.deleteConfirm"))) return;
-
     isDeleting.value = true;
     actionError.value = "";
     actionSuccess.value = "";

@@ -7,6 +7,8 @@ const user = ref<{ name: string; email: string } | null>(null);
 const isLoading = ref(true);
 const isSidebarOpen = ref(false);
 
+const deleteTargetId = ref<number | null>(null);
+
 const moods: Record<string, string> = {
   sad: "😢",
   lonely: "😔",
@@ -25,6 +27,7 @@ const {
   latestEntry,
   isEntriesLoading,
   isUpdating,
+  isDeleting,
   errorMessage,
   actionError,
   actionSuccess,
@@ -40,6 +43,24 @@ const {
   updateEntry,
   deleteEntry,
 } = useJournal();
+
+function requestDelete(id: number) {
+  deleteTargetId.value = id;
+}
+
+function cancelDelete() {
+  if (isDeleting.value) return;
+
+  deleteTargetId.value = null;
+}
+
+async function confirmDelete() {
+  if (deleteTargetId.value === null || isDeleting.value) return;
+
+  await deleteEntry(deleteTargetId.value);
+
+  deleteTargetId.value = null;
+}
 
 onMounted(async () => {
   try {
@@ -163,7 +184,7 @@ onMounted(async () => {
             :edit-note="editNote"
             :is-updating="isUpdating"
             @edit="startEditing"
-            @delete="deleteEntry"
+            @delete="requestDelete"
             @update:mood="editMood = $event"
             @update:note="editNote = $event"
             @save-edit="updateEntry"
@@ -178,6 +199,13 @@ onMounted(async () => {
           />
         </template>
       </section>
+
+      <JournalDeleteDialog
+        v-if="deleteTargetId !== null"
+        :is-deleting="isDeleting"
+        @confirm="confirmDelete"
+        @cancel="cancelDelete"
+      />
 
       <footer class="footer">{{ t("dashboard.footer") }} <span>♡</span></footer>
     </main>
