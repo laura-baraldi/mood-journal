@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\MoodEntry;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
@@ -72,5 +73,55 @@ class MoodEntryController extends Controller
         return response()->json([
             'data' => $entry,
         ], 201);
+    }
+
+    public function update(Request $request, int $id): JsonResponse
+    {
+        $entry = $request->user()
+            ->moodEntries()
+            ->findOrFail($id);
+
+        $validated = $request->validate([
+            'mood' => [
+                'sometimes',
+                'required',
+                'string',
+                Rule::in([
+                    'sad',
+                    'lonely',
+                    'anxious',
+                    'frustrated',
+                    'angry',
+                    'tired',
+                    'neutral',
+                    'calm',
+                    'happy',
+                    'excited',
+                ]),
+            ],
+            'note' => [
+                'sometimes',
+                'nullable',
+                'string',
+                'max:2000',
+            ],
+        ]);
+
+        $entry->update($validated);
+
+        return response()->json([
+            'data' => $entry->fresh(),
+        ]);
+    }
+
+    public function destroy(Request $request, int $id): JsonResponse
+    {
+        $entry = $request->user()
+            ->moodEntries()
+            ->findOrFail($id);
+
+        $entry->delete();
+
+        return response()->json(null, 204);
     }
 }
