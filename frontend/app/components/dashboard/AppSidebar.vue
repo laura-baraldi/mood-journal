@@ -13,6 +13,7 @@ const emit = defineEmits<{
 }>();
 
 const { t } = useI18n();
+const route = useRoute();
 </script>
 
 <template>
@@ -35,20 +36,25 @@ const { t } = useI18n();
     <div class="nav-label">{{ t("navigation.menu") }}</div>
 
     <nav class="navigation">
-      <a href="#" class="nav-item active" @click="emit('close')">
+      <NuxtLink
+        to="/"
+        class="nav-item"
+        :class="{ active: route.path === '/' }"
+        @click="emit('close')"
+      >
         <span>◫</span>
         {{ t("navigation.dashboard") }}
-      </a>
+      </NuxtLink>
 
-      <div
-        class="nav-item nav-item-disabled"
-        aria-disabled="true"
-        title="Coming soon"
+      <NuxtLink
+        to="/journal"
+        class="nav-item"
+        :class="{ active: route.path === '/journal' }"
+        @click="emit('close')"
       >
         <span>▤</span>
         {{ t("navigation.journal") }}
-        <span class="coming-soon">Soon</span>
-      </div>
+      </NuxtLink>
 
       <div
         class="nav-item nav-item-disabled"
