@@ -1,6 +1,6 @@
 <script setup lang="ts">
 const { logout } = useAuth();
-const { t } = useI18n();
+const { t, locale, setLocale } = useI18n();
 const config = useRuntimeConfig();
 
 const user = ref<{ name: string; email: string } | null>(null);
@@ -90,6 +90,26 @@ onMounted(async () => {
           <p class="eyebrow">{{ t("journal.eyebrow") }}</p>
           <h1>{{ t("journal.title") }}</h1>
           <p class="subtitle">{{ t("journal.subtitle") }}</p>
+        </div>
+
+        <div class="language-switch" aria-label="Choose language">
+          <button
+            type="button"
+            :class="{ active: locale === 'en' }"
+            :aria-pressed="locale === 'en'"
+            @click="setLocale('en')"
+          >
+            EN
+          </button>
+
+          <button
+            type="button"
+            :class="{ active: locale === 'sv' }"
+            :aria-pressed="locale === 'sv'"
+            @click="setLocale('sv')"
+          >
+            SV
+          </button>
         </div>
       </header>
 
@@ -222,6 +242,10 @@ onMounted(async () => {
 }
 
 .page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 20px;
   margin-bottom: 30px;
 }
 
@@ -249,6 +273,32 @@ h1 {
   margin: 10px 0 0;
   color: #909b91;
   font-size: 14px;
+}
+
+.language-switch {
+  display: flex;
+  gap: 3px;
+  padding: 4px;
+  border: 1px solid #e7ebe4;
+  border-radius: 30px;
+  background: white;
+  flex-shrink: 0;
+}
+
+.language-switch button {
+  border: 0;
+  border-radius: 20px;
+  padding: 7px 10px;
+  background: transparent;
+  color: #89948a;
+  font-size: 10px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.language-switch button.active {
+  background: #edf3eb;
+  color: #56745e;
 }
 
 .journal-section {
@@ -347,6 +397,11 @@ h1 {
 @media (max-width: 600px) {
   .main-content {
     padding: 20px 15px;
+  }
+
+  .page-header {
+    align-items: flex-start;
+    flex-wrap: wrap;
   }
 
   .journal-section {
