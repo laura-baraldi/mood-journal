@@ -1,11 +1,20 @@
 <script setup lang="ts">
-defineProps<{
+const props = defineProps<{
+  id: number;
+  mood: string;
   moodEmoji: string;
   moodLabel: string;
   time: string;
   note: string | null;
   noNoteLabel: string;
 }>();
+
+const emit = defineEmits<{
+  edit: [id: number];
+  delete: [id: number];
+}>();
+
+const { t } = useI18n();
 </script>
 
 <template>
@@ -28,6 +37,16 @@ defineProps<{
     <p v-else class="no-note">
       {{ noNoteLabel }}
     </p>
+
+    <div class="entry-actions">
+      <button type="button" class="edit-button" @click="emit('edit', id)">
+        {{ t("journal.edit") }}
+      </button>
+
+      <button type="button" class="delete-button" @click="emit('delete', id)">
+        {{ t("journal.delete") }}
+      </button>
+    </div>
   </article>
 </template>
 
@@ -88,5 +107,32 @@ defineProps<{
   color: #a3ada3;
   font-size: 11px;
   font-style: italic;
+}
+
+.entry-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 15px;
+}
+
+.entry-actions button {
+  padding: 8px 13px;
+  border-radius: 8px;
+  font-size: 11px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.edit-button {
+  border: 1px solid #dfe7dd;
+  background: white;
+  color: #617c65;
+}
+
+.delete-button {
+  border: 1px solid #f0dada;
+  background: white;
+  color: #b45c5c;
 }
 </style>

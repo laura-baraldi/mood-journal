@@ -12,6 +12,11 @@ const props = defineProps<{
   moods: Record<string, string>;
 }>();
 
+const emit = defineEmits<{
+  edit: [entry: MoodEntry];
+  delete: [id: number];
+}>();
+
 const { t, locale } = useI18n();
 
 const groupedEntries = computed(() => {
@@ -67,11 +72,15 @@ function formatTime(value: string) {
         <JournalEntryCard
           v-for="entry in group.entries"
           :key="entry.id"
+          :id="entry.id"
+          :mood="entry.mood"
           :mood-emoji="moods[entry.mood] ?? '—'"
           :mood-label="t(`moods.${entry.mood}`)"
           :time="formatTime(entry.created_at)"
           :note="entry.note"
           :no-note-label="t('journal.noNote')"
+          @edit="emit('edit', entry)"
+          @delete="emit('delete', $event)"
         />
       </div>
     </article>
