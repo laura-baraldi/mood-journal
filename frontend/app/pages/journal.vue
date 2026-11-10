@@ -1,74 +1,11 @@
 <script setup lang="ts">
-type MoodEntry = {
-  id: number;
-  mood: string;
-  note: string | null;
-  created_at: string;
-  updated_at?: string;
-};
-
-// Describes the paginated response returned by the Laravel API.
-type JournalResponse = {
-  data: MoodEntry[];
-  meta: {
-    current_page: number;
-    last_page: number;
-    per_page: number;
-    total: number;
-  };
-  stats: {
-    total_entries: number;
-    days_tracked: number;
-  };
-};
-
 const { logout } = useAuth();
 const { t } = useI18n();
 const config = useRuntimeConfig();
 
 const user = ref<{ name: string; email: string } | null>(null);
-const entries = ref<MoodEntry[]>([]);
-const latestEntry = ref<MoodEntry | null>(null);
-
 const isLoading = ref(true);
-const isEntriesLoading = ref(false);
 const isSidebarOpen = ref(false);
-const errorMessage = ref("");
-
-const editingEntry = ref<MoodEntry | null>(null);
-const editMood = ref("");
-const editNote = ref("");
-const isUpdating = ref(false);
-const isDeleting = ref(false);
-const actionError = ref("");
-const actionSuccess = ref("");
-
-const availableMoods = [
-  "sad",
-  "lonely",
-  "anxious",
-  "frustrated",
-  "angry",
-  "tired",
-  "neutral",
-  "calm",
-  "happy",
-  "excited",
-];
-
-// Pagination metadata is provided by the backend.
-const meta = ref({
-  current_page: 1,
-  last_page: 1,
-  per_page: 10,
-  total: 0,
-});
-
-// Statistics cover all entries, not just the current page.
-const stats = ref({
-  total_entries: 0,
-  days_tracked: 0,
-});
 
 const moods: Record<string, string> = {
   sad: "😢",
@@ -83,157 +20,27 @@ const moods: Record<string, string> = {
   excited: "🤩",
 };
 
-// Fetches one page of journal entries from the Laravel API.
-async function loadEntries(page = 1) {
-  errorMessage.value = "";
-  isEntriesLoading.value = true;
+const {
+  entries,
+  latestEntry,
+  isEntriesLoading,
+  isUpdating,
+  errorMessage,
+  actionError,
+  actionSuccess,
+  editingEntry,
+  editMood,
+  editNote,
+  meta,
+  stats,
+  loadEntries,
+  goToPage,
+  startEditing,
+  cancelEditing,
+  updateEntry,
+  deleteEntry,
+} = useJournal();
 
-  try {
-    const response = await $fetch<JournalResponse>("/api/mood-entries", {
-      baseURL: config.public.apiBase,
-      credentials: "include",
-      headers: {
-        Accept: "application/json",
-      },
-      query: {
-        page,
-      },
-    });
-
-    // Update the displayed entries and pagination metadata.
-    entries.value = response.data;
-    meta.value = response.meta;
-
-    // Keep statistics independent of the currently displayed page.
-    stats.value = response.stats;
-
-    // The latest entry is always found on the first page.
-    if (response.meta.current_page === 1) {
-      latestEntry.value = response.data[0] ?? null;
-    }
-  } catch (error) {
-    console.error("Failed to load journal entries:", error);
-    errorMessage.value = t("journal.loadError");
-  } finally {
-    isEntriesLoading.value = false;
-  }
-}
-
-// Prevents navigation outside the available pages.
-async function goToPage(page: number) {
-  if (page < 1 || page > meta.value.last_page || isEntriesLoading.value) {
-    return;
-  }
-
-  await loadEntries(page);
-}
-
-function startEditing(entry: MoodEntry) {
-  editingEntry.value = entry;
-  editMood.value = entry.mood;
-  editNote.value = entry.note ?? "";
-  actionError.value = "";
-  actionSuccess.value = "";
-}
-
-function cancelEditing() {
-  editingEntry.value = null;
-  editMood.value = "";
-  editNote.value = "";
-  actionError.value = "";
-}
-
-async function updateEntry() {
-  if (!editingEntry.value || isUpdating.value) return;
-
-  isUpdating.value = true;
-  actionError.value = "";
-  actionSuccess.value = "";
-
-  try {
-    await $fetch("/sanctum/csrf-cookie", {
-      baseURL: config.public.apiBase,
-      credentials: "include",
-    });
-
-    const xsrfCookie = useCookie("XSRF-TOKEN");
-
-    await $fetch(`/api/mood-entries/${editingEntry.value.id}`, {
-      baseURL: config.public.apiBase,
-      method: "PATCH",
-      credentials: "include",
-      headers: {
-        Accept: "application/json",
-        "X-XSRF-TOKEN": xsrfCookie.value
-          ? decodeURIComponent(xsrfCookie.value)
-          : "",
-      },
-      body: {
-        mood: editMood.value,
-        note: editNote.value.trim() || null,
-      },
-    });
-
-    editingEntry.value = null;
-    actionSuccess.value = t("journal.updated");
-
-    await loadEntries(meta.value.current_page);
-  } catch (error: any) {
-    actionError.value = error.data?.message || t("journal.updateError");
-  } finally {
-    isUpdating.value = false;
-  }
-}
-
-async function deleteEntry(id: number) {
-  if (isDeleting.value) return;
-
-  if (!window.confirm(t("journal.deleteConfirm"))) return;
-
-  isDeleting.value = true;
-  actionError.value = "";
-  actionSuccess.value = "";
-
-  try {
-    await $fetch("/sanctum/csrf-cookie", {
-      baseURL: config.public.apiBase,
-      credentials: "include",
-    });
-
-    const xsrfCookie = useCookie("XSRF-TOKEN");
-
-    await $fetch(`/api/mood-entries/${id}`, {
-      baseURL: config.public.apiBase,
-      method: "DELETE",
-      credentials: "include",
-      headers: {
-        Accept: "application/json",
-        "X-XSRF-TOKEN": xsrfCookie.value
-          ? decodeURIComponent(xsrfCookie.value)
-          : "",
-      },
-    });
-
-    if (editingEntry.value?.id === id) {
-      cancelEditing();
-    }
-
-    const nextPage =
-      entries.value.length === 1 && meta.value.current_page > 1
-        ? meta.value.current_page - 1
-        : meta.value.current_page;
-
-    actionSuccess.value = t("journal.deleted");
-
-    await loadEntries(nextPage);
-  } catch (error: any) {
-    actionError.value = error.data?.message || t("journal.deleteError");
-  } finally {
-    isDeleting.value = false;
-  }
-}
-
-// Load the authenticated user and the first journal page on mount.
 onMounted(async () => {
   try {
     user.value = await $fetch("/api/user", {
@@ -307,6 +114,26 @@ onMounted(async () => {
           </span>
         </div>
 
+        <div v-if="actionError" class="feedback error-feedback">
+          {{ actionError }}
+        </div>
+
+        <div v-if="actionSuccess" class="feedback success-feedback">
+          {{ actionSuccess }}
+        </div>
+
+        <JournalEntryEditor
+          v-if="editingEntry"
+          :mood="editMood"
+          :note="editNote"
+          :is-saving="isUpdating"
+          :moods="moods"
+          @update:mood="editMood = $event"
+          @update:note="editNote = $event"
+          @save="updateEntry"
+          @cancel="cancelEditing"
+        />
+
         <div v-if="errorMessage" class="state-card error-state">
           <p>{{ errorMessage }}</p>
           <button @click="loadEntries(meta.current_page)">
@@ -319,37 +146,20 @@ onMounted(async () => {
             {{ t("dashboard.loading") }}
           </div>
 
-          <JournalTimeline v-else :entries="entries" :moods="moods" />
+          <JournalTimeline
+            v-else
+            :entries="entries"
+            :moods="moods"
+            @edit="startEditing"
+            @delete="deleteEntry"
+          />
 
-          <!-- Pagination controls are shown only when multiple pages exist. -->
-          <nav
-            v-if="meta.last_page > 1"
-            class="pagination"
-            :aria-label="t('journal.pagination')"
-          >
-            <button
-              class="pagination-button"
-              :disabled="meta.current_page === 1 || isEntriesLoading"
-              @click="goToPage(meta.current_page - 1)"
-            >
-              {{ t("journal.previous") }}
-            </button>
-
-            <span class="page-indicator">
-              {{ t("journal.page") }} {{ meta.current_page }}
-              {{ t("journal.of") }} {{ meta.last_page }}
-            </span>
-
-            <button
-              class="pagination-button"
-              :disabled="
-                meta.current_page === meta.last_page || isEntriesLoading
-              "
-              @click="goToPage(meta.current_page + 1)"
-            >
-              {{ t("journal.next") }}
-            </button>
-          </nav>
+          <JournalPagination
+            :current-page="meta.current_page"
+            :last-page="meta.last_page"
+            :is-loading="isEntriesLoading"
+            @change="goToPage"
+          />
         </template>
       </section>
 
@@ -496,44 +306,21 @@ h1 {
   font-size: 13px;
 }
 
-.pagination {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 20px;
-  margin-top: 30px;
-  padding-top: 22px;
-  border-top: 1px solid #edf0eb;
+.feedback {
+  margin-bottom: 16px;
+  padding: 12px 15px;
+  border-radius: 9px;
+  font-size: 13px;
 }
 
-.pagination-button {
-  padding: 9px 15px;
-  border: 1px solid #dfe7dd;
-  border-radius: 8px;
-  background: white;
-  color: #617c65;
-  font-size: 12px;
-  font-weight: 600;
-  cursor: pointer;
-  transition:
-    background 0.2s,
-    border-color 0.2s;
+.error-feedback {
+  color: #9c4545;
+  background: #fff2f0;
 }
 
-.pagination-button:hover:not(:disabled) {
-  background: #f3f7f1;
-  border-color: #a9bba7;
-}
-
-.pagination-button:disabled {
-  opacity: 0.4;
-  cursor: not-allowed;
-}
-
-.page-indicator {
-  color: #89968b;
-  font-size: 12px;
-  white-space: nowrap;
+.success-feedback {
+  color: #52765a;
+  background: #f0f7ef;
 }
 
 .footer {
@@ -568,14 +355,6 @@ h1 {
 
   .section-heading {
     align-items: flex-start;
-  }
-
-  .pagination {
-    gap: 10px;
-  }
-
-  .pagination-button {
-    padding: 9px 11px;
   }
 }
 </style>
