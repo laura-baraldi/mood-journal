@@ -25,9 +25,23 @@ ready to handle registration requests immediately. If you encounter an
 error when registering, wait up to one minute and try again once the
 services have had time to start.
 
-## Screenshot
+## Screenshots
+
+### Dashboard
 
 ![Mood Journal Dashboard](docs/images/mood-journal-dashboard.png)
+
+### My Journal
+
+![Mood Journal Timeline](docs/images/mood-journal-timeline.png)
+
+### Editing an Entry
+
+![Edit Journal Entry](docs/images/mood-journal-edit-entry.png)
+
+### Delete Confirmation
+
+![Delete Confirmation Dialog](docs/images/mood-journal-delete-confirmation.png)
 
 ## Tech Stack
 
