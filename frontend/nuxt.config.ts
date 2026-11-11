@@ -2,6 +2,18 @@ export default defineNuxtConfig({
   compatibilityDate: "2025-07-15",
   devtools: { enabled: true },
 
+  app: {
+    head: {
+      link: [
+        {
+          rel: "icon",
+          type: "image/png",
+          href: "/mood-journal-favicon.png",
+        },
+      ],
+    },
+  },
+
   modules: ["@nuxtjs/i18n"],
 
   runtimeConfig: {
@@ -18,6 +30,13 @@ export default defineNuxtConfig({
   i18n: {
     defaultLocale: "en",
     strategy: "prefix_except_default",
+
+    detectBrowserLanguage: {
+      useCookie: true,
+      cookieKey: "i18n_redirected",
+      redirectOn: "root",
+      alwaysRedirect: false,
+    },
 
     locales: [
       {

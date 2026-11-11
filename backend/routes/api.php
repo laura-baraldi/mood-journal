@@ -19,4 +19,6 @@ Route::get('/user', function (Request $request) {
 Route::middleware('auth:sanctum')->group(function () {
     Route::get('/mood-entries', [MoodEntryController::class, 'index']);
     Route::post('/mood-entries', [MoodEntryController::class, 'store']);
+    Route::patch('/mood-entries/{id}', [MoodEntryController::class, 'update']);
+    Route::delete('/mood-entries/{id}', [MoodEntryController::class, 'destroy']);
 });

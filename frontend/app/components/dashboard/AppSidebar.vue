@@ -13,6 +13,11 @@ const emit = defineEmits<{
 }>();
 
 const { t } = useI18n();
+const route = useRoute();
+const localePath = useLocalePath();
+
+const dashboardPath = computed(() => localePath("/"));
+const journalPath = computed(() => localePath("/journal"));
 </script>
 
 <template>
@@ -35,20 +40,25 @@ const { t } = useI18n();
     <div class="nav-label">{{ t("navigation.menu") }}</div>
 
     <nav class="navigation">
-      <a href="#" class="nav-item active" @click="emit('close')">
+      <NuxtLink
+        :to="dashboardPath"
+        class="nav-item"
+        :class="{ active: route.path === dashboardPath }"
+        @click="emit('close')"
+      >
         <span>◫</span>
         {{ t("navigation.dashboard") }}
-      </a>
+      </NuxtLink>
 
-      <div
-        class="nav-item nav-item-disabled"
-        aria-disabled="true"
-        title="Coming soon"
+      <NuxtLink
+        :to="journalPath"
+        class="nav-item"
+        :class="{ active: route.path === journalPath }"
+        @click="emit('close')"
       >
         <span>▤</span>
         {{ t("navigation.journal") }}
-        <span class="coming-soon">Soon</span>
-      </div>
+      </NuxtLink>
 
       <div
         class="nav-item nav-item-disabled"
@@ -73,8 +83,26 @@ const { t } = useI18n();
         </div>
       </div>
 
-      <button class="logout-button" @click="logout">
-        ↗ {{ t("navigation.logout") }}
+      <button class="logout-button" type="button" @click="logout">
+        <svg
+          class="logout-icon"
+          xmlns="http://www.w3.org/2000/svg"
+          width="17"
+          height="17"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="1.8"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          aria-hidden="true"
+        >
+          <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+          <path d="m16 17 5-5-5-5" />
+          <path d="M21 12H9" />
+        </svg>
+
+        {{ t("navigation.logout") }}
       </button>
     </div>
   </aside>
@@ -217,6 +245,9 @@ const { t } = useI18n();
 
 .logout-button {
   width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 10px;
   padding: 11px;
   border: 1px solid #e8ece6;
   border-radius: 9px;
@@ -225,6 +256,20 @@ const { t } = useI18n();
   font-size: 12px;
   text-align: left;
   cursor: pointer;
+  transition:
+    background 0.2s ease,
+    border-color 0.2s ease,
+    color 0.2s ease;
+}
+
+.logout-icon {
+  flex-shrink: 0;
+}
+
+.logout-button:hover {
+  background: #f7f9f5;
+  border-color: #d8e3d6;
+  color: #617c65;
 }
 
 .close-button {
